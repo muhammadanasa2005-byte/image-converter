@@ -1,0 +1,2245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="google-site-verification" content="hGbVb70_nWqSYyGslzcdNJLaMv53pZZ7eqz5CR9FdsQ" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Ultimate Image Tools - Convert, compress, resize, crop images online. Free, fast, private. No signup required.">
+<meta name="keywords" content="image converter, jpg to png, image compressor, resize image, crop image, webp converter, heic to jpg">
+<title>Ultimate Image Tools – Convert, Compress, Edit & More</title>
+
+<!-- ✅ Favicon: Simple SVG -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiMyNTYzZWIiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJBcmlhbCI+SVQ8L3RleHQ+PC9zdmc+">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiB2aWV3Qm94PSIwIDAgMTgwIDE4MCI+PHJlY3Qgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxODAiIGZpbGw9IiMyNTYzZWIiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSI3MCIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJBcmlhbCI+SVQ8L3RleHQ+PC9zdmc+">
+<!-- Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css?family=Inter:400,600,800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --main: #2563eb;
+    --main-hover: #1e40af;
+    --bg: #f1f5f9;
+    --card: #fff;
+    --dark-bg: #0f172a;
+    --dark-card: #1e293b;
+    --transition: 0.25s;
+    --radius: 12px;
+    --shadow: 0 3px 12px rgba(30,64,175,0.08);
+    --footer-bg: #111827;
+    --footer-color: #fff;
+    --text-light: #64748b;
+    --input-bg: #f9fafb;
+    --text-main: #1e293b;
+    --success: #10b981;
+    --warning: #f59e0b;
+}
+
+html, body {
+    background: var(--bg);
+    color: var(--text-main);
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    transition: background var(--transition), color var(--transition);
+    scroll-behavior: smooth;
+}
+
+body.dark {
+    background: var(--dark-bg);
+    color: #fff;
+}
+
+body.dark .card, body.dark .tool, body.dark .controls, body.dark .drop-area, 
+body.dark .modal-content, body.dark .search-bar input, body.dark .tool-card,
+body.dark .footer-grid, body.dark .app-badge {
+    background: var(--dark-card);
+    color: #fff;
+    border-color: #334155;
+}
+
+body.dark .tool-desc, body.dark .file-info, body.dark .footer-grid p, body.dark .footer-grid a {
+    color: #cbd5e1;
+}
+
+body.dark .search-result { border-bottom-color: #334155; }
+body.dark .search-result:hover { background: #334155; }
+
+/* Header */
+header {
+    background: linear-gradient(100deg, var(--main), var(--main-hover));
+    color: #fff;
+    padding: 30px 10px 36px 10px;
+    text-align: center;
+    border-radius: 0 0 36px 36px;
+    position: relative;
+    box-shadow: var(--shadow);
+}
+
+.header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 15px;
+}
+
+.brand {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.lang-select, .auth-btn, .toggle-dark {
+    font-size: 14px;
+    padding: 7px 12px;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+.lang-select {
+    background: #fff;
+    color: var(--main);
+    border: 1px solid #ccc;
+    max-width: 130px;
+}
+
+.auth-btn {
+    background: #fff;
+    color: var(--main);
+    font-weight: 600;
+    box-shadow: 0 1px 6px rgba(37,99,235,0.07);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.auth-btn:hover {
+    background: var(--main-hover);
+    color: #fff;
+}
+
+.toggle-dark {
+    background: transparent;
+    border: 2px solid #fff;
+    color: #fff;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-dark:hover {
+    background: #fff;
+    color: var(--main-hover);
+}
+
+nav {
+    margin: 22px 0 0 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 0 15px;
+}
+
+nav a {
+    color: #fff;
+    background: rgba(255,255,255,0.15);
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 18px;
+    padding: 6px 16px;
+    transition: var(--transition);
+    font-size: 0.95rem;
+}
+
+nav a:hover, nav a.active {
+    background: #fff;
+    color: var(--main);
+}
+
+/* Container */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 15px 18px 40px 18px;
+}
+
+/* Search Bar */
+.search-bar {
+    width: 100%;
+    margin: 28px 0 20px 0;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.search-bar input {
+    width: 420px;
+    max-width: 98vw;
+    padding: 12px 45px 12px 18px;
+    border: 1.5px solid #ececec;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border var(--transition);
+    background: var(--input-bg);
+    color: #18181b;
+    outline: none;
+    box-shadow: var(--shadow);
+}
+
+body.dark .search-bar input {
+    background: #334155;
+    color: #fff;
+    border-color: #475569;
+}
+
+.search-bar .fa-search {
+    position: absolute;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1em;
+    color: var(--main-hover);
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.search-results {
+    position: absolute;
+    z-index: 99;
+    top: 100%;
+    width: 100%;
+    max-width: 420px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--card);
+    border-radius: 0 0 12px 12px;
+    box-shadow: var(--shadow);
+    border: 1.5px solid #ececec;
+    border-top: none;
+    display: none;
+    flex-direction: column;
+    max-height: 230px;
+    overflow-y: auto;
+    padding: 5px 0;
+}
+
+.search-results.active { display: flex; }
+
+.search-result {
+    padding: 14px 26px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--main-hover);
+    border-bottom: 1px solid #f5f5fa;
+    transition: background 0.13s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-result:last-child { border-bottom: none; }
+.search-result:hover { background: #ecf3fe; }
+body.dark .search-result:hover { background: #334155; }
+
+/* Drop Area & Controls */
+.drop-area {
+    border: 2px dashed var(--main);
+    padding: 49px 22px;
+    border-radius: var(--radius);
+    text-align: center;
+    background: #fff;
+    transition: var(--transition);
+    color: #384565;
+    font-weight: 600;
+    margin-bottom: 16px;
+    cursor: pointer;
+}
+
+body.dark .drop-area {
+    background: var(--dark-card);
+    color: #cbd5e1;
+    border-color: var(--main);
+}
+
+.drop-area.dragover { background: #e0edff; }
+body.dark .drop-area.dragover { background: #1e3a5f; }
+
+.controls {
+    background: #fff;
+    padding: 15px 19px 9px 19px;
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 13px;
+    box-shadow: 0 2px 10px rgba(41,43,53,0.06);
+}
+
+body.dark .controls {
+    background: var(--dark-card);
+}
+
+.controls label { 
+    margin-right: 7px; 
+    font-size: 14px; 
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.controls select, .controls input[type='number'], .controls input[type='range'] {
+    padding: 7px 8px;
+    border-radius: 6px;
+    border: 1.2px solid #ccc;
+    font-size: 14px;
+    margin-right: 13px;
+    background: #f9fafb;
+    min-width: 80px;
+}
+
+body.dark .controls select, 
+body.dark .controls input[type='number'],
+body.dark .controls input[type='range'] {
+    background: #334155;
+    border-color: #475569;
+    color: #fff;
+}
+
+.tool-btn {
+    background: var(--main-hover);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.tool-btn:hover { background: var(--main); }
+.tool-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.tool-btn.secondary {
+    background: #64748b;
+}
+.tool-btn.secondary:hover { background: #475569; }
+
+.tool-btn.success {
+    background: var(--success);
+}
+.tool-btn.success:hover { background: #059669; }
+
+/* Preview Grid */
+.preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 18px;
+    margin: 24px 0 0 0;
+}
+
+.card {
+    background: var(--card);
+    padding: 14px 8px 18px 8px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: box-shadow var(--transition), transform var(--transition);
+    position: relative;
+}
+
+body.dark .card { background: var(--dark-card); }
+
+.card:hover {
+    box-shadow: 0 5px 20px rgba(30,64,175,0.14);
+    transform: translateY(-4px) scale(1.017);
+}
+
+.card img {
+    width: 96%;
+    max-width: 170px;
+    border-radius: 7px;
+    margin-bottom: 10px;
+    margin-top: 6px;
+    object-fit: contain;
+    aspect-ratio: 1.2;
+    background: #f4f5fa;
+}
+
+body.dark .card img { background: #334155; }
+
+.file-info {
+    margin: 0 0 6px 0;
+    font-size: 0.92rem;
+    color: var(--text-light);
+    text-align: center;
+    line-height: 1.4;
+}
+
+.download-btn {
+    background: var(--main);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 15px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 7px;
+    transition: background var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.download-btn:hover { background: var(--main-hover); }
+
+.download-all {
+    margin-top: 25px;
+    width: 100%;
+    font-size: 15px;
+    padding: 12px;
+    background: var(--main-hover);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.download-all:hover { background: var(--main); }
+.download-all:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.progress {
+    height: 6px;
+    width: 95%;
+    background: #ddd;
+    border-radius: 8px;
+    margin: 16px 0 0 0;
+    overflow: hidden;
+}
+
+body.dark .progress { background: #334155; }
+
+.bar {
+    height: 100%;
+    width: 0%;
+    background: var(--main-hover);
+    transition: width 0.8s;
+}
+
+/* Tools Grid */
+.tools-grid {
+    margin: 38px 0 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 22px;
+}
+
+.tool {
+    background: var(--card);
+    padding: 22px 15px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+    border-top: 4px solid var(--main);
+}
+
+body.dark .tool { background: var(--dark-card); }
+
+.tool:hover {
+    transform: translateY(-6px) scale(1.025);
+    background: #e6eefe;
+}
+
+body.dark .tool:hover { background: #334155; }
+
+.tool-icon {
+    font-size: 2.3em;
+    margin-bottom: 14px;
+    color: var(--main);
+}
+
+.tool-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.tool-desc {
+    color: var(--text-light);
+    font-size: 0.93rem;
+    line-height: 1.4;
+}
+
+/* Footer */
+footer {
+    background: var(--footer-bg);
+    color: var(--footer-color);
+    margin-top: 55px;
+    padding: 36px 6vw 23px 6vw;
+    text-align: center;
+    border-radius: 20px 20px 0 0;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+    gap: 24px;
+    margin-bottom: 22px;
+    text-align: left;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.footer-grid h3 { 
+    color: #e0e7ff; 
+    margin-bottom: 9px; 
+    font-size: 1.1rem;
+}
+
+.footer-grid a, .footer-grid p {
+    color: #b5bad5;
+    margin-bottom: 8px;
+    display: block;
+    text-decoration: none;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.footer-grid a:hover { color: #fff; }
+
+.app-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.app-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #1f2937;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: transform 0.2s;
+    width: fit-content;
+}
+
+.app-badge:hover {
+    transform: translateY(-2px);
+    background: #374151;
+}
+
+.app-badge i { font-size: 1.3rem; }
+
+.footer-bottom {
+    margin-top: 8px;
+    font-size: 0.92rem;
+    color: #8892b5;
+    border-top: 1px solid #374151;
+    padding-top: 20px;
+}
+
+.footer-links {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.footer-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.footer-links a:hover { color: #fff; }
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 555;
+    left: 0; top: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.6);
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    backdrop-filter: blur(3px);
+}
+
+.modal.active { display: flex; }
+
+.modal-content {
+    background: #fff;
+    color: #1e293b;
+    border-radius: 15px;
+    width: 380px;
+    max-width: 94vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 28px 22px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    position: relative;
+    animation: modalfadein 0.3s;
+}
+
+body.dark .modal-content {
+    background: var(--dark-card);
+    color: #fff;
+}
+
+.modal-content h2 {
+    margin: 0 0 20px 0;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.modal-content input, .modal-content textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 7px;
+    border: 1px solid #bbb;
+    margin: 8px 0 16px 0;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+body.dark .modal-content input,
+body.dark .modal-content textarea {
+    background: #334155;
+    border-color: #475569;
+    color: #fff;
+}
+
+.modal-content button[type='submit'] {
+    width: 100%;
+    padding: 12px 0;
+    border: none;
+    border-radius: 7px;
+    background: var(--main);
+    color: #fff;
+    font-weight: 700;
+    margin-top: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.2s;
+}
+
+.modal-content button[type='submit']:hover {
+    background: var(--main-hover);
+}
+
+.close-modal {
+    position: absolute;
+    right: 18px; top: 16px;
+    font-size: 1.4em;
+    color: #94a3b8;
+    border: none;
+    background: none;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.close-modal:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+body.dark .close-modal:hover {
+    background: #334155;
+    color: #fff;
+}
+
+.modal-content .switch-link {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.95rem;
+    color: var(--text-light);
+}
+
+.modal-content .switch-link a {
+    color: var(--main);
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.modal-content .switch-link a:hover {
+    text-decoration: underline;
+}
+
+/* Privacy Modal Content */
+.privacy-content {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-light);
+}
+
+body.dark .privacy-content { color: #cbd5e1; }
+
+.privacy-content h3 {
+    color: var(--text-main);
+    margin: 18px 0 10px 0;
+    font-size: 1.15rem;
+}
+
+body.dark .privacy-content h3 { color: #fff; }
+
+.privacy-content ul {
+    padding-left: 20px;
+    margin: 10px 0;
+}
+
+.privacy-content li { margin: 6px 0; }
+
+/* Crop Canvas Container */
+.crop-container {
+    display: none;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.crop-container.active { display: block; }
+
+#crop-canvas {
+    max-width: 100%;
+    border: 2px solid var(--main);
+    border-radius: 8px;
+    cursor: crosshair;
+    background: #f8fafc;
+}
+
+body.dark #crop-canvas { background: #334155; }
+
+.crop-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+/* Status Messages */
+.status-msg {
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+    font-size: 0.95rem;
+    text-align: center;
+    display: none;
+}
+
+.status-msg.success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+}
+
+.status-msg.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+.status-msg.info {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #93c5fd;
+}
+
+body.dark .status-msg.success {
+    background: #14532d;
+    color: #86efac;
+    border-color: #166534;
+}
+
+body.dark .status-msg.error {
+    background: #7f1d1d;
+    color: #fca5a5;
+    border-color: #991b1b;
+}
+
+body.dark .status-msg.info {
+    background: #1e3a5f;
+    color: #93c5fd;
+    border-color: #1e40af;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+    .header-row { flex-direction: column; text-align: center; }
+    .header-actions { justify-content: center; }
+    .controls { flex-direction: column; align-items: stretch; }
+    .controls label { justify-content: space-between; }
+    .search-bar input { width: 90%; }
+    .preview { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    .footer-grid { grid-template-columns: 1fr; text-align: center; }
+    .app-badges { align-items: center; }
+    nav { flex-wrap: wrap; }
+    nav a { font-size: 0.9rem; padding: 5px 12px; }
+}
+
+@keyframes modalfadein {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: none; opacity: 1; }
+}
+
+/* Utility Classes */
+.hidden { display: none !important; }
+.text-center { text-align: center; }
+.mt-2 { margin-top: 1rem; }
+.mb-2 { margin-bottom: 1rem; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="header-row">
+        <span class="brand" onclick="resetView()">
+            <i class="fa-solid fa-image"></i> 
+            Ultimate <span style="color:#dbeafe;">Image Tools</span>
+        </span>
+        <div class="header-actions">
+            <select class="lang-select" id="lang-select" aria-label="Language Selector">
+                <option value="en" selected>English</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="zh">中文</option>
+                <option value="hi">हिंदी</option>
+                <option value="ur">اردو</option>
+                <option value="pt">Português</option>
+            </select>
+            <button class="auth-btn" id="auth-btn" type="button">
+                <i class="fa fa-user"></i> 
+                <span class="auth-text">Login</span>
+            </button>
+            <button class="toggle-dark" id="toggle-dark" aria-label="Toggle dark mode">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+    </div>
+    <nav>
+        <a href="#converter" class="active" data-section="converter">Converter</a>
+        <a href="#compressor" data-section="compressor">Compressor</a>
+        <a href="#resizer" data-section="resizer">Resizer</a>
+        <a href="#cropper" data-section="cropper">Crop</a>
+        <a href="#grid" data-section="grid">All Tools</a>
+    </nav>
+    <div class="tools-hero" style="max-width:700px; margin:20px auto; font-size:1.1rem; color:#dbeafe; font-weight:450; text-align:center; padding:0 15px;">
+        <span class="hero-text">Convert, compress, resize, and edit images instantly online. 100% free & private.</span>
+    </div>
+</header>
+
+<!-- MAIN CONTAINER -->
+<div class="container">
+    <!-- Status Message -->
+    <div id="status-msg" class="status-msg"></div>
+
+    <!-- SEARCH -->
+    <div class="search-bar" id="search-bar">
+        <input type="text" id="search-input" placeholder="🔎 Search tools...">
+        <i class="fa fa-search"></i>
+        <div class="search-results" id="search-results"></div>
+    </div>
+
+    <!-- CONVERTER SECTION -->
+    <section id="converter" class="tool-section">
+        <h2 class="text-center mb-2" style="font-weight:700;">🔄 Image Converter</h2>
+        <p class="text-center" style="color:var(--text-light); margin-bottom:20px;">Convert between JPG, PNG, WEBP, GIF, BMP, AVIF</p>
+        
+        <div class="drop-area" id="drop-area">
+            <i class="fa-solid fa-arrow-up-from-bracket" style="font-size:2em; margin-bottom:8px;"></i>
+            <div class="drop-text">Drag & drop images here or <span style="color:var(--main); text-decoration:underline; cursor:pointer;" id="browse-btn">browse</span></div>
+            <input type="file" id="file-input" accept="image/*" multiple style="display: none;">
+        </div>
+
+        <div class="controls" id="controls">
+            <label><i class="fa-solid fa-file-image"></i> <span class="format-label">Format</span></label>
+            <select id="format">
+                <option value="image/jpeg">JPG</option>
+                <option value="image/png">PNG</option>
+                <option value="image/webp">WEBP</option>
+                <option value="image/gif">GIF</option>
+                <option value="image/bmp">BMP</option>
+                <option value="image/avif">AVIF</option>
+            </select>
+            
+            <label><i class="fa-solid fa-sliders"></i> <span class="quality-label">Quality</span></label>
+            <input type="range" id="quality" min="0.1" max="1" step="0.1" value="0.9" style="width:100px;">
+            <span id="quality-value">90%</span>
+            
+            <label><i class="fa-solid fa-arrows-left-right"></i> <span class="width-label">Width</span></label>
+            <input type="number" id="width" placeholder="Auto" style="width:75px;">
+            
+            <label><i class="fa-solid fa-arrows-up-down"></i> <span class="height-label">Height</span></label>
+            <input type="number" id="height" placeholder="Auto" style="width:75px;">
+            
+            <button class="tool-btn secondary" id="clear-btn">
+                <i class="fa-solid fa-broom"></i> <span class="clear-text">Clear</span>
+            </button>
+        </div>
+
+        <div class="preview" id="preview"></div>
+        <button class="download-all" id="download-all-btn" disabled>
+            <i class="fa-solid fa-file-zipper"></i> <span class="download-all-text">Download All (ZIP)</span>
+        </button>
+    </section>
+
+    <!-- COMPRESSOR SECTION (Hidden by default) -->
+    <section id="compressor" class="tool-section hidden">
+        <h2 class="text-center mb-2" style="font-weight:700;">🗜️ Image Compressor</h2>
+        <p class="text-center" style="color:var(--text-light); margin-bottom:20px;">Reduce file size while keeping quality</p>
+        
+        <div class="drop-area" id="compress-drop-area">
+            <i class="fa-solid fa-compress" style="font-size:2em; margin-bottom:8px;"></i>
+            <div>Drop images to compress or <span style="color:var(--main); text-decoration:underline; cursor:pointer;" id="compress-browse">browse</span></div>
+            <input type="file" id="compress-input" accept="image/*" multiple style="display: none;">
+        </div>
+
+        <div class="controls">
+            <label><i class="fa-solid fa-sliders"></i> Compression Level</label>
+            <input type="range" id="compress-level" min="0.1" max="0.9" step="0.1" value="0.7" style="width:150px;">
+            <span id="compress-value">70%</span>
+            <button class="tool-btn success" id="compress-btn">
+                <i class="fa-solid fa-compress"></i> Compress
+            </button>
+            <button class="tool-btn secondary" id="compress-clear">
+                <i class="fa-solid fa-broom"></i> Clear
+            </button>
+        </div>
+
+        <div class="preview" id="compress-preview"></div>
+        <button class="download-all" id="compress-download-all" disabled>
+            <i class="fa-solid fa-file-zipper"></i> Download All
+        </button>
+    </section>
+
+    <!-- RESIZER SECTION -->
+    <section id="resizer" class="tool-section hidden">
+        <h2 class="text-center mb-2" style="font-weight:700;">📐 Image Resizer</h2>
+        <p class="text-center" style="color:var(--text-light); margin-bottom:20px;">Resize images by pixels or percentage</p>
+        
+        <div class="drop-area" id="resize-drop-area">
+            <i class="fa-solid fa-expand" style="font-size:2em; margin-bottom:8px;"></i>
+            <div>Drop images to resize or <span style="color:var(--main); text-decoration:underline; cursor:pointer;" id="resize-browse">browse</span></div>
+            <input type="file" id="resize-input" accept="image/*" multiple style="display: none;">
+        </div>
+
+        <div class="controls">
+            <label><i class="fa-solid fa-arrows-left-right"></i> Width (px)</label>
+            <input type="number" id="resize-width" placeholder="Auto" style="width:80px;">
+            
+            <label><i class="fa-solid fa-arrows-up-down"></i> Height (px)</label>
+            <input type="number" id="resize-height" placeholder="Auto" style="width:80px;">
+            
+            <label><i class="fa-solid fa-percent"></i> Scale %</label>
+            <input type="number" id="resize-scale" placeholder="100" min="10" max="500" style="width:70px;" value="100">
+            
+            <button class="tool-btn" id="resize-apply">
+                <i class="fa-solid fa-check"></i> Apply
+            </button>
+            <button class="tool-btn secondary" id="resize-clear">
+                <i class="fa-solid fa-broom"></i> Clear
+            </button>
+        </div>
+
+        <div class="preview" id="resize-preview"></div>
+        <button class="download-all" id="resize-download-all" disabled>
+            <i class="fa-solid fa-file-zipper"></i> Download All
+        </button>
+    </section>
+
+    <!-- CROPPER SECTION -->
+    <section id="cropper" class="tool-section hidden">
+        <h2 class="text-center mb-2" style="font-weight:700;">✂️ Image Cropper</h2>
+        <p class="text-center" style="color:var(--text-light); margin-bottom:20px;">Select area and crop your image</p>
+        
+        <div class="drop-area" id="crop-drop-area">
+            <i class="fa-solid fa-crop-simple" style="font-size:2em; margin-bottom:8px;"></i>
+            <div>Drop an image to crop or <span style="color:var(--main); text-decoration:underline; cursor:pointer;" id="crop-browse">browse</span></div>
+            <input type="file" id="crop-input" accept="image/*" style="display: none;">
+        </div>
+
+        <div class="crop-container" id="crop-container">
+            <canvas id="crop-canvas"></canvas>
+            <div class="crop-controls">
+                <button class="tool-btn" id="crop-apply">
+                    <i class="fa-solid fa-check"></i> Crop & Download
+                </button>
+                <button class="tool-btn secondary" id="crop-cancel">
+                    <i class="fa-solid fa-xmark"></i> Cancel
+                </button>
+            </div>
+        </div>
+
+        <div class="preview" id="crop-preview"></div>
+    </section>
+
+    <!-- TOOLS GRID -->
+    <section id="grid" class="tool-section hidden">
+        <h2 style="margin:30px 0 20px 0; text-align:center; font-weight:800; font-size:1.9rem;" class="all-tools-text">All Image Tools</h2>
+        <div class="tools-grid" id="tools-grid"></div>
+    </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-grid">
+        <div>
+            <h3 class="about-text">About</h3>
+            <p class="about-desc">Ultimate Image Tools is a free online platform for converting, compressing, and resizing images. Fast. Private. No registration required.</p>
+        </div>
+        <div>
+            <h3 class="links-text">Links</h3>
+            <a href="#" onclick="showModal('modal-privacy'); return false;">Privacy Policy</a>
+            <a href="#" onclick="showModal('modal-terms'); return false;">Terms of Service</a>
+            <a href="#contact">Contact Us</a>
+        </div>
+        <div>
+            <h3 class="popular-tools-text">Popular Tools</h3>
+            <a href="#converter" onclick="switchTool('converter'); return false;">JPG to PNG</a>
+            <a href="#converter" onclick="switchTool('converter'); return false;">PNG to WEBP</a>
+            <a href="#compressor" onclick="switchTool('compressor'); return false;">Compress Image</a>
+        </div>
+        <div>
+            <h3>Get the App</h3>
+            <div class="app-badges">
+                <a href="#" class="app-badge" onclick="showStatus('App coming soon! Stay tuned.', 'info'); return false;">
+                    <i class="fa-brands fa-google-play"></i>
+                    <div>
+                        <div style="font-size:0.8rem; opacity:0.9;">GET IT ON</div>
+                        <div style="font-weight:600;">Google Play</div>
+                    </div>
+                </a>
+                <a href="#" class="app-badge" onclick="showStatus('App coming soon! Stay tuned.', 'info'); return false;">
+                    <i class="fa-brands fa-apple"></i>
+                    <div>
+                        <div style="font-size:0.8rem; opacity:0.9;">Download on the</div>
+                        <div style="font-weight:600;">App Store</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer-links">
+        <a href="#" onclick="showModal('modal-privacy'); return false;">Privacy</a>
+        <a href="#" onclick="showModal('modal-terms'); return false;">Terms</a>
+        <a href="#contact">Contact</a>
+        <a href="#">FAQ</a>
+    </div>
+    
+    <div class="footer-bottom">
+        &copy; <span id="year"></span> <span class="site-title">Ultimate Image Tools</span>. All rights reserved.
+    </div>
+</footer>
+
+<!-- AUTH MODALS -->
+<div class="modal" id="modal-login">
+    <div class="modal-content">
+        <button class="close-modal" onclick="hideModal('modal-login')"><i class="fa fa-xmark"></i></button>
+        <h2 class="login-title">Login</h2>
+        <form id="login-form">
+            <label class="email-label">Email</label>
+            <input type="email" id="login-email" required placeholder="your@email.com">
+            <label class="password-label">Password</label>
+            <input type="password" id="login-password" required placeholder="••••••••" minlength="6">
+            <button type="submit" class="login-btn-text">Login</button>
+        </form>
+        <div class="switch-link">
+            Don't have an account? <a onclick="switchAuthModal('signup')">Sign Up</a>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modal-signup">
+    <div class="modal-content">
+        <button class="close-modal" onclick="hideModal('modal-signup')"><i class="fa fa-xmark"></i></button>
+        <h2 class="signup-title">Create Account</h2>
+        <form id="signup-form">
+            <label class="name-label">Full Name</label>
+            <input type="text" id="signup-name" required placeholder="John Doe">
+            <label class="email-label">Email</label>
+            <input type="email" id="signup-email" required placeholder="your@email.com">
+            <label class="password-label">Password</label>
+            <input type="password" id="signup-password" required placeholder="Min 6 characters" minlength="6">
+            <button type="submit" class="signup-btn-text">Sign Up</button>
+        </form>
+        <div class="switch-link">
+            Already have an account? <a onclick="switchAuthModal('login')">Login</a>
+        </div>
+    </div>
+</div>
+
+<!-- PRIVACY MODAL -->
+<div class="modal" id="modal-privacy">
+    <div class="modal-content">
+        <button class="close-modal" onclick="hideModal('modal-privacy')"><i class="fa fa-xmark"></i></button>
+        <h2>Privacy Policy</h2>
+        <div class="privacy-content">
+            <p><strong>Last Updated:</strong> <span id="privacy-date"></span></p>
+            
+            <h3>🔒 Your Privacy Matters</h3>
+            <p>Ultimate Image Tools processes all images directly in your browser. <strong>No images are uploaded to our servers.</strong> Everything happens locally on your device.</p>
+            
+            <h3>📊 Data We Collect</h3>
+            <ul>
+                <li><strong>None!</strong> We don't collect, store, or track your images.</li>
+                <li>We may use anonymous analytics to improve our service (you can opt-out in browser settings).</li>
+            </ul>
+            
+            <h3>🍪 Cookies</h3>
+            <p>We only use essential cookies to remember your preferences (like dark mode or language). No tracking cookies.</p>
+            
+            <h3>👶 Children's Privacy</h3>
+            <p>Our service is safe for all ages. We don't knowingly collect data from children under 13.</p>
+            
+            <h3>📧 Contact Us</h3>
+            <p>Questions about privacy? Email us at: <strong>privacy@ultimateimagetools.com</strong></p>
+        </div>
+    </div>
+</div>
+
+<!-- TERMS MODAL -->
+<div class="modal" id="modal-terms">
+    <div class="modal-content">
+        <button class="close-modal" onclick="hideModal('modal-terms')"><i class="fa fa-xmark"></i></button>
+        <h2>Terms of Service</h2>
+        <div class="privacy-content">
+            <p><strong>Last Updated:</strong> <span id="terms-date"></span></p>
+            
+            <h3>✅ Acceptable Use</h3>
+            <ul>
+                <li>Use our tools for personal or commercial projects.</li>
+                <li>Don't use the service for illegal content or to infringe copyrights.</li>
+                <li>Don't attempt to hack, overload, or misuse the platform.</li>
+            </ul>
+            
+            <h3>⚠️ Disclaimer</h3>
+            <p>While we strive for accuracy, we don't guarantee 100% error-free processing. Always backup important images.</p>
+            
+            <h3>🔄 Changes</h3>
+            <p>We may update these terms. Continued use means you accept the changes.</p>
+            
+            <h3>📧 Contact</h3>
+            <p>Questions? Email: <strong>support@ultimateimagetools.com</strong></p>
+        </div>
+    </div>
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+// ==================== GLOBAL STATE ====================
+const state = {
+    currentUser: null,
+    convertedFiles: [],
+    compressedFiles: [],
+    resizedFiles: [],
+    currentTool: 'converter',
+    crop: {
+        canvas: null,
+        ctx: null,
+        img: null,
+        startX: 0,
+        startY: 0,
+        endX: 0,
+        endY: 0,
+        isDrawing: false
+    }
+};
+
+// ==================== TRANSLATIONS ====================
+const translations = {
+    en: {
+        'auth-text': 'Login', 'drop-text': 'Drag & drop images here or <span style="color:var(--main);text-decoration:underline;cursor:pointer;" id="browse-btn">browse</span>',
+        'clear-text': 'Clear', 'format-label': 'Format', 'quality-label': 'Quality', 'width-label': 'Width', 'height-label': 'Height',
+        'about-text': 'About', 'links-text': 'Links', 'popular-tools-text': 'Popular Tools', 'site-title': 'Ultimate Image Tools',
+        'all-tools-text': 'All Image Tools', 'hero-text': 'Convert, compress, resize, and edit images instantly online. 100% free & private.',
+        'login-title': 'Login', 'signup-title': 'Create Account', 'email-label': 'Email', 'password-label': 'Password',
+        'name-label': 'Full Name', 'login-btn-text': 'Login', 'signup-btn-text': 'Sign Up',
+        'download-all-text': 'Download All (ZIP)', 'search-placeholder': '🔎 Search tools...',
+        'about-desc': 'Ultimate Image Tools is a free online platform for converting, compressing, and resizing images. Fast. Private. No registration required.',
+        'status-converting': 'Converting...', 'status-compressing': 'Compressing...', 'status-resizing': 'Resizing...',
+        'status-success': 'Done! Click download to save.', 'status-error': 'Error processing image. Try again.',
+        'status-no-images': 'No images to download.', 'confirm-clear': 'Clear all processed images?'
+    },
+    es: {
+        'auth-text': 'Entrar', 'drop-text': 'Arrastra imágenes aquí o <span style="color:var(--main);text-decoration:underline;cursor:pointer;" id="browse-btn">explora</span>',
+        'clear-text': 'Limpiar', 'format-label': 'Formato', 'quality-label': 'Calidad', 'width-label': 'Ancho', 'height-label': 'Alto',
+        'about-text': 'Acerca de', 'links-text': 'Enlaces', 'popular-tools-text': 'Herramientas', 'site-title': 'Ultimate Image Tools',
+        'all-tools-text': 'Todas las herramientas', 'hero-text': 'Convierte, comprime, redimensiona y edita imágenes al instante. 100% gratis y privado.',
+        'login-title': 'Iniciar sesión', 'signup-title': 'Crear cuenta', 'email-label': 'Correo', 'password-label': 'Contraseña',
+        'name-label': 'Nombre completo', 'login-btn-text': 'Entrar', 'signup-btn-text': 'Registrarse',
+        'download-all-text': 'Descargar todo (ZIP)', 'search-placeholder': '🔎 Buscar herramientas...',
+        'about-desc': 'Plataforma gratuita para convertir, comprimir y redimensionar imágenes. Rápido. Privado. Sin registro.',
+        'status-converting': 'Convirtiendo...', 'status-compressing': 'Comprimiendo...', 'status-resizing': 'Redimensionando...',
+        'status-success': '¡Listo! Haz clic para descargar.', 'status-error': 'Error al procesar. Intenta de nuevo.',
+        'status-no-images': 'No hay imágenes para descargar.', 'confirm-clear': '¿Borrar todas las imágenes?'
+    },
+    fr: {
+        'auth-text': 'Connexion', 'drop-text': 'Glissez-déposez des images ou <span style="color:var(--main);text-decoration:underline;cursor:pointer;" id="browse-btn">parcourez</span>',
+        'clear-text': 'Effacer', 'format-label': 'Format', 'quality-label': 'Qualité', 'width-label': 'Largeur', 'height-label': 'Hauteur',
+        'about-text': 'À propos', 'links-text': 'Liens', 'popular-tools-text': 'Outils populaires', 'site-title': 'Ultimate Image Tools',
+        'all-tools-text': 'Tous les outils', 'hero-text': 'Convertissez, compressez, redimensionnez et éditez des images instantanément. 100% gratuit et privé.',
+        'login-title': 'Connexion', 'signup-title': 'Créer un compte', 'email-label': 'Email', 'password-label': 'Mot de passe',
+        'name-label': 'Nom complet', 'login-btn-text': 'Se connecter', 'signup-btn-text': "S'inscrire",
+        'download-all-text': 'Tout télécharger (ZIP)', 'search-placeholder': '🔎 Rechercher des outils...',
+        'about-desc': 'Plateforme gratuite pour convertir, compresser et redimensionner des images. Rapide. Privé. Sans inscription.',
+        'status-converting': 'Conversion...', 'status-compressing': 'Compression...', 'status-resizing': 'Redimensionnement...',
+        'status-success': 'Terminé ! Cliquez pour télécharger.', 'status-error': 'Erreur de traitement. Réessayez.',
+        'status-no-images': 'Aucune image à télécharger.', 'confirm-clear': 'Effacer toutes les images ?'
+    },
+    de: {
+        'auth-text': 'Anmelden', 'drop-text': 'Bilder hierher ziehen oder <span style="color:var(--main);text-decoration:underline;cursor:pointer;" id="browse-btn">durchsuchen</span>',
+        'clear-text': 'Löschen', 'format-label': 'Format', 'quality-label': 'Qualität', 'width-label': 'Breite', 'height-label': 'Höhe',
+        'about-text': 'Über', 'links-text': 'Links', 'popular-tools-text': 'Beliebte Tools', 'site-title': 'Ultimate Image Tools',
+        'all-tools-text': 'Alle Tools', 'hero-text': 'Bilder sofort konvertieren, komprimieren, skalieren und bearbeiten. 100% kostenlos & privat.',
+        'login-title': 'Anmelden', 'signup-title': 'Konto erstellen', 'email-label': 'E-Mail', 'password-label': 'Passwort',
+        'name-label': 'Vollständiger Name', 'login-btn-text': 'Anmelden', 'signup-btn-text': 'Registrieren',
+        'download-all-text': 'Alle herunterladen (ZIP)', 'search-placeholder': '🔎 Tools suchen...',
+        'about-desc': 'Kostenlose Online-Plattform zum Konvertieren, Komprimieren und Skalieren von Bildern. Schnell. Privat. Ohne Registrierung.',
+        'status-converting': 'Konvertiere...', 'status-compressing': 'Komprimiere...', 'status-resizing': 'Skaliere...',
+        'status-success': 'Fertig! Zum Download klicken.', 'status-error': 'Fehler bei der Verarbeitung. Erneut versuchen.',
+        'status-no-images': 'Keine Bilder zum Download.', 'confirm-clear': 'Alle Bilder löschen?'
+    },
+    zh: {
+        'auth-text': '登录', 'drop-text': '拖放图片到这里或 <span style="color:var(--main);text-decoration:underline;cursor:pointer;" id="browse-btn">浏览</span>',
+        'clear-text': '清除', 'format-label': '格式', 'quality-label': '质量', 'width-label': '宽度', 'height-label': '高度',
+        'about-text': '关于', 'links-text': '链接', 'popular-tools-text': '热门工具', 'site-title': 'Ultimate Image Tools',
+        'all-tools-text': '所有工具', 'hero-text': '即时在线转换、压缩、调整大小和编辑图片。100% 免费且私密。',
+        'login-title': '登录', 'signup-title': '创建账户', 'email-label': '邮箱', 'password-label': '密码',
+        'name-label': '全名', 'login-btn-text': '登录', 'signup-btn-text': '注册',
+        'download-all-text': '下载全部 (ZIP)', 'search-placeholder': '🔎 搜索工具...',
+        'about-desc': '免费在线平台，用于转换、压缩和调整图片大小。快速、私密、无需注册。',
+        'status-converting': '转换中...', 'status-compressing': '压缩中...', 'status-resizing': '调整大小中...',
+        'status-success': '完成！点击下载保存。', 'status-error': '处理图像时出错，请重试。',
+        'status-no-images': '没有可下载的图片。', 'confirm-clear': '清除所有已处理的图片？'
+    },
+    hi: {
+        'auth-text': 'लॉगिन', 'drop-text': 'छवियों को यहाँ खींचें या <span style="color:var(--main);text-decoration:underline;cursor:pointer;" id="browse-btn">ब्राउज़ करें</span>',
+        'clear-text': 'साफ़ करें', 'format-label': 'फॉर्मेट', 'quality-label': 'गुणवत्ता', 'width-label': 'चौड़ाई', 'height-label': 'ऊंचाई',
+        'about-text': 'बारे में', 'links-text': 'लिंक्स', 'popular-tools-text': 'लोकप्रिय टूल्स', 'site-title': 'अल्टीमेट इमेज टूल्स',
+        'all-tools-text': 'सभी टूल्स', 'hero-text': 'छवियों को तुरंत ऑनलाइन कन्वर्ट, कम्प्रेस, रीसाइज़ और एडिट करें। 100% मुफ्त और निजी।',
+        'login-title': 'लॉगिन', 'signup-title': 'खाता बनाएं', 'email-label': 'ईमेल', 'password-label': 'पासवर्ड',
+        'name-label': 'पूरा नाम', 'login-btn-text': 'लॉगिन', 'signup-btn-text': 'साइन अप',
+        'download-all-text': 'सभी डाउनलोड करें (ZIP)', 'search-placeholder': '🔎 टूल्स खोजें...',
+        'about-desc': 'छवियों को कन्वर्ट, कम्प्रेस और रीसाइज़ करने के लिए मुफ्त ऑनलाइन प्लेटफॉर्म। तेज़। निजी। बिना रजिस्ट्रेशन के।',
+        'status-converting': 'कन्वर्ट हो रहा है...', 'status-compressing': 'कम्प्रेस हो रहा है...', 'status-resizing': 'रीसाइज़ हो रहा है...',
+        'status-success': 'हो गया! डाउनलोड करने के लिए क्लिक करें।', 'status-error': 'छवि प्रोसेस करने में त्रुटि। पुनः प्रयास करें।',
+        'status-no-images': 'डाउनलोड करने के लिए कोई छवि नहीं।', 'confirm-clear': 'सभी प्रोसेस की गई छवियाँ साफ़ करें?'
+    },
+    ur: {
+        'auth-text': 'لاگ ان', 'drop-text': 'تصاویر یہاں ڈریگ کریں یا <span style="color:var(--main);text-decoration:underline;cursor:pointer;" id="browse-btn">براؤز کریں</span>',
+        'clear-text': 'صاف کریں', 'format-label': 'فارمیٹ', 'quality-label': 'کوالٹی', 'width-label': 'چوڑائی', 'height-label': 'اونچائی',
+        'about-text': 'بارے میں', 'links-text': 'لنکس', 'popular-tools-text': 'مقبول ٹولز', 'site-title': 'الٹیمیٹ امیج ٹولز',
+        'all-tools-text': 'تمام ٹولز', 'hero-text': 'تصاویر کو فوری آن لائن کنورٹ، کمپریس، ریسائز اور ایڈٹ کریں۔ 100% مفت اور پرائیویٹ۔',
+        'login-title': 'لاگ ان', 'signup-title': 'اکاؤنٹ بنائیں', 'email-label': 'ای میل', 'password-label': 'پاس ورڈ',
+        'name-label': 'مکمل نام', 'login-btn-text': 'لاگ ان', 'signup-btn-text': 'سائن اپ',
+        'download-all-text': 'سب ڈاؤن لوڈ کریں (ZIP)', 'search-placeholder': '🔎 ٹولز تلاش کریں...',
+        'about-desc': 'تصاویر کو کنورٹ، کمپریس اور ریسائز کرنے کے لیے مفت آن لائن پلیٹ فارم۔ تیز۔ پرائیویٹ۔ بغیر رجسٹریشن کے۔',
+        'status-converting': 'کنورٹ ہو رہا ہے...', 'status-compressing': 'کمپریس ہو رہا ہے...', 'status-resizing': 'ریسائز ہو رہا ہے...',
+        'status-success': 'ہو گیا! ڈاؤن لوڈ کرنے کے لیے کلک کریں۔', 'status-error': 'تصویر پروسیس کرنے میں خرابی۔ دوبارہ کوشش کریں۔',
+        'status-no-images': 'ڈاؤن لوڈ کرنے کے لیے کوئی تصویر نہیں۔', 'confirm-clear': 'تمام پروسیس کی گئی تصاویر صاف کریں؟'
+    },
+    pt: {
+        'auth-text': 'Entrar', 'drop-text': 'Arraste imagens aqui ou <span style="color:var(--main);text-decoration:underline;cursor:pointer;" id="browse-btn">navegue</span>',
+        'clear-text': 'Limpar', 'format-label': 'Formato', 'quality-label': 'Qualidade', 'width-label': 'Largura', 'height-label': 'Altura',
+        'about-text': 'Sobre', 'links-text': 'Links', 'popular-tools-text': 'Ferramentas', 'site-title': 'Ultimate Image Tools',
+        'all-tools-text': 'Todas ferramentas', 'hero-text': 'Converta, comprima, redimensione e edite imagens instantaneamente. 100% grátis e privado.',
+        'login-title': 'Entrar', 'signup-title': 'Criar conta', 'email-label': 'Email', 'password-label': 'Senha',
+        'name-label': 'Nome completo', 'login-btn-text': 'Entrar', 'signup-btn-text': 'Cadastrar',
+        'download-all-text': 'Baixar tudo (ZIP)', 'search-placeholder': '🔎 Buscar ferramentas...',
+        'about-desc': 'Plataforma gratuita para converter, comprimir e redimensionar imagens. Rápido. Privado. Sem cadastro.',
+        'status-converting': 'Convertendo...', 'status-compressing': 'Comprimindo...', 'status-resizing': 'Redimensionando...',
+        'status-success': 'Pronto! Clique para baixar.', 'status-error': 'Erro ao processar. Tente novamente.',
+        'status-no-images': 'Nenhuma imagem para baixar.', 'confirm-clear': 'Limpar todas as imagens?'
+    }
+};
+
+// ==================== UTILITY FUNCTIONS ====================
+function $(id) { return document.getElementById(id); }
+function $$(selector, parent = document) { return parent.querySelectorAll(selector); }
+
+function showStatus(message, type = 'info') {
+    const el = $('status-msg');
+    el.textContent = message;
+    el.className = `status-msg ${type}`;
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display = 'none'; }, 4000);
+}
+
+function formatBytes(bytes) {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function getExtension(mimeType) {
+    const map = {
+        'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp',
+        'image/gif': 'gif', 'image/bmp': 'bmp', 'image/avif': 'avif'
+    };
+    return map[mimeType] || 'jpg';
+}
+
+// ==================== TRANSLATION SYSTEM ====================
+function translateUI(lang) {
+    const t = translations[lang] || translations['en'];
+    
+    // Update elements by class name
+    Object.keys(t).forEach(key => {
+        const elements = document.querySelectorAll('.' + key);
+        elements.forEach(el => {
+            if (key === 'drop-text') {
+                el.innerHTML = t[key];
+                // Re-attach browse event
+                const browseBtn = document.getElementById('browse-btn');
+                if (browseBtn) browseBtn.onclick = () => $('file-input').click();
+            } else {
+                el.textContent = t[key];
+            }
+        });
+        
+        // Special handling for placeholders
+        if (key === 'search-placeholder') {
+            const inp = $('search-input');
+            if (inp) inp.placeholder = t[key];
+        }
+    });
+    
+    // Update quality display
+    updateQualityDisplay();
+}
+
+$('lang-select').addEventListener('change', e => {
+    const lang = e.target.value;
+    translateUI(lang);
+    document.documentElement.lang = lang;
+    localStorage.setItem('language', lang);
+});
+
+// ==================== DARK MODE ====================
+function setDarkMode(enabled) {
+    document.body.classList.toggle('dark', enabled);
+    localStorage.setItem('darkMode', enabled ? '1' : '0');
+    const icon = $('toggle-dark').querySelector('i');
+    icon.className = enabled ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+}
+
+$('toggle-dark').onclick = () => {
+    const isDark = !document.body.classList.contains('dark');
+    setDarkMode(isDark);
+};
+
+// Load saved preferences
+if (localStorage.getItem('darkMode') === '1') setDarkMode(true);
+if (localStorage.getItem('language')) {
+    $('lang-select').value = localStorage.getItem('language');
+    translateUI(localStorage.getItem('language'));
+}
+
+// ==================== MODAL SYSTEM ====================
+function showModal(id) {
+    $(id).classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function hideModal(id) {
+    $(id).classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function switchAuthModal(type) {
+    hideModal('modal-login');
+    hideModal('modal-signup');
+    showModal(type === 'login' ? 'modal-login' : 'modal-signup');
+}
+
+// Close modal on outside click
+window.onclick = function(e) {
+    if (e.target.classList.contains('modal')) {
+        e.target.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+};
+
+// Close modal on Escape key
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        $$('.modal.active').forEach(modal => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    }
+});
+
+// ==================== AUTH SYSTEM (LocalStorage Demo) ====================
+function getCurrentUser() {
+    const user = localStorage.getItem('currentUser');
+    return user ? JSON.parse(user) : null;
+}
+
+function updateAuthUI() {
+    const user = getCurrentUser();
+    const btn = $('auth-btn');
+    const text = btn.querySelector('.auth-text');
+    
+    if (user) {
+        text.textContent = user.name.split(' ')[0];
+        btn.title = 'Click to logout';
+        btn.onclick = logout;
+    } else {
+        text.textContent = translations[$('lang-select').value]?.['auth-text'] || 'Login';
+        btn.title = 'Login to your account';
+        btn.onclick = () => showModal('modal-login');
+    }
+}
+
+function login(email, password) {
+    // Demo: Check against stored users
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const user = users.find(u => u.email === email && u.password === password);
+    
+    if (user) {
+        localStorage.setItem('currentUser', JSON.stringify({ 
+            name: user.name, 
+            email: user.email 
+        }));
+        hideModal('modal-login');
+        showStatus('Welcome back, ' + user.name.split(' ')[0] + '! ✓', 'success');
+        updateAuthUI();
+        return true;
+    }
+    showStatus('Invalid email or password ✗', 'error');
+    return false;
+}
+
+function signup(name, email, password) {
+    let users = JSON.parse(localStorage.getItem('users') || '[]');
+    
+    if (users.some(u => u.email === email)) {
+        showStatus('Email already registered ✗', 'error');
+        return false;
+    }
+    
+    users.push({ name, email, password, joined: new Date().toISOString() });
+    localStorage.setItem('users', JSON.stringify(users));
+    
+    // Auto-login after signup
+    localStorage.setItem('currentUser', JSON.stringify({ name, email }));
+    hideModal('modal-signup');
+    showStatus('Account created successfully! ✓', 'success');
+    updateAuthUI();
+    return true;
+}
+
+function logout() {
+    localStorage.removeItem('currentUser');
+    showStatus('Logged out successfully ✓', 'success');
+    updateAuthUI();
+}
+
+// Form submissions
+$('login-form').onsubmit = e => {
+    e.preventDefault();
+    login($('login-email').value, $('login-password').value);
+};
+
+$('signup-form').onsubmit = e => {
+    e.preventDefault();
+    signup($('signup-name').value, $('signup-email').value, $('signup-password').value);
+};
+
+// ==================== TOOL NAVIGATION ====================
+function switchTool(toolId) {
+    // Hide all sections
+    $$('.tool-section').forEach(sec => sec.classList.add('hidden'));
+    // Show selected
+    $(toolId).classList.remove('hidden');
+    // Update nav
+    $$('nav a').forEach(a => a.classList.remove('active'));
+    $$(`nav a[data-section="${toolId}"]`).forEach(a => a.classList.add('active'));
+    
+    state.currentTool = toolId;
+    
+    // Reset previews when switching
+    if (toolId !== 'converter') $('preview').innerHTML = '';
+    if (toolId !== 'compressor') $('compress-preview').innerHTML = '';
+    if (toolId !== 'resizer') $('resize-preview').innerHTML = '';
+    if (toolId !== 'cropper') {
+        $('crop-preview').innerHTML = '';
+        $('crop-container').classList.remove('active');
+    }
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Nav click handlers
+$$('nav a').forEach(link => {
+    link.onclick = e => {
+        e.preventDefault();
+        const target = link.getAttribute('data-section');
+        switchTool(target);
+    };
+});
+
+// Brand click to reset
+function resetView() {
+    switchTool('converter');
+}
+
+// ==================== SEARCH FUNCTIONALITY ====================
+const searchTools = [
+    { name: 'Image Converter', desc: 'Convert JPG, PNG, WEBP, GIF', section: 'converter' },
+    { name: 'Image Compressor', desc: 'Reduce file size', section: 'compressor' },
+    { name: 'Image Resizer', desc: 'Change dimensions', section: 'resizer' },
+    { name: 'Image Cropper', desc: 'Crop to selected area', section: 'cropper' },
+    { name: 'JPG to PNG', desc: 'Convert JPG to PNG format', section: 'converter' },
+    { name: 'PNG to WEBP', desc: 'Convert PNG to WEBP', section: 'converter' },
+    { name: 'HEIC to JPG', desc: 'Convert iPhone photos', section: 'converter' },
+    { name: 'Compress JPEG', desc: 'Shrink JPG files', section: 'compressor' },
+    { name: 'Resize for Instagram', desc: '1080x1080 square', section: 'resizer' },
+    { name: 'Crop Profile Picture', desc: 'Square crop for avatars', section: 'cropper' }
+];
+
+$('search-input').oninput = function() {
+    const val = this.value.toLowerCase().trim();
+    const results = $('search-results');
+    
+    if (val.length < 2) {
+        results.classList.remove('active');
+        return;
+    }
+    
+    const matches = searchTools.filter(t => 
+        t.name.toLowerCase().includes(val) || 
+        t.desc.toLowerCase().includes(val)
+    );
+    
+    if (matches.length === 0) {
+        results.innerHTML = '<div class="search-result"><i class="fa fa-info-circle"></i> No tools found</div>';
+    } else {
+        results.innerHTML = matches.map(t => `
+            <div class="search-result" onclick="switchTool('${t.section}'); $('search-input').value=''; $('search-results').classList.remove('active');">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <div>
+                    <strong>${t.name}</strong><br>
+                    <small style="color:var(--text-light)">${t.desc}</small>
+                </div>
+            </div>
+        `).join('');
+    }
+    results.classList.add('active');
+};
+
+// Hide search results on blur
+$('search-input').onblur = () => {
+    setTimeout(() => $('search-results').classList.remove('active'), 200);
+};
+
+// ==================== IMAGE PROCESSING CORE ====================
+function processImage(file, options, callback, previewContainer, filesArray) {
+    if (!file.type.startsWith('image/')) {
+        showStatus('Please select valid image files only ✗', 'error');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+            // Calculate dimensions
+            let width = options.width || img.width;
+            let height = options.height || img.height;
+            
+            // Handle scale for resizer
+            if (options.scale && options.scale !== 100) {
+                width = Math.round(img.width * options.scale / 100);
+                height = Math.round(img.height * options.scale / 100);
+            }
+            
+            // Maintain aspect ratio if only one dimension provided
+            if (options.width && !options.height) {
+                height = Math.round(img.height * options.width / img.width);
+            } else if (!options.width && options.height) {
+                width = Math.round(img.width * options.height / img.height);
+            }
+            
+            // Create canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw image (for crop, we'll handle separately)
+            if (!options.crop) {
+                ctx.drawImage(img, 0, 0, width, height);
+            }
+            
+            // Get output format and quality
+            const format = options.format || file.type;
+            const quality = options.quality !== undefined ? options.quality : 0.9;
+            
+            // Convert to blob
+            canvas.toBlob(function(blob) {
+                if (!blob) {
+                    showStatus('Error processing image ✗', 'error');
+                    return;
+                }
+                
+                const url = URL.createObjectURL(blob);
+                const ext = getExtension(format);
+                const name = file.name.replace(/\.[^/.]+$/, '');
+                
+                // Create preview card
+                const card = createPreviewCard(url, `${name}.${ext}`, formatBytes(blob.size), url, `${name}.${ext}`);
+                previewContainer.appendChild(card);
+                
+                // Add to files array
+                filesArray.push({ blob, name: `${name}.${ext}`, url, originalName: file.name });
+                
+                // Enable download all button
+                const downloadBtn = previewContainer.parentElement.querySelector('.download-all');
+                if (downloadBtn) downloadBtn.disabled = false;
+                
+                // Show success
+                showStatus(translations[$('lang-select').value]?.['status-success'] || 'Done! ✓', 'success');
+                
+                if (callback) callback({ blob, url, name: `${name}.${ext}` });
+            }, format, quality);
+        };
+        img.onerror = () => showStatus('Failed to load image ✗', 'error');
+        img.src = evt.target.result;
+    };
+    reader.onerror = () => showStatus('Failed to read file ✗', 'error');
+    reader.readAsDataURL(file);
+}
+
+function createPreviewCard(src, filename, size, downloadUrl, downloadName) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = filename;
+    img.loading = 'lazy';
+    
+    const info = document.createElement('div');
+    info.className = 'file-info';
+    info.innerHTML = `<strong>${filename}</strong><br><span style="color:var(--main)">${size}</span>`;
+    
+    const dlBtn = document.createElement('button');
+    dlBtn.className = 'download-btn';
+    dlBtn.innerHTML = '<i class="fa fa-download"></i> Download';
+    dlBtn.onclick = function() {
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = downloadName;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            a.remove();
+            URL.revokeObjectURL(downloadUrl);
+        }, 100);
+    };
+    
+    card.appendChild(img);
+    card.appendChild(info);
+    card.appendChild(dlBtn);
+    
+    return card;
+}
+
+// ==================== CONVERTER TOOL ====================
+let converterFiles = [];
+
+function setupConverter() {
+    const dropArea = $('drop-area');
+    const fileInput = $('file-input');
+    
+    $('browse-btn').onclick = () => fileInput.click();
+    
+    dropArea.onclick = e => {
+        if (e.target === dropArea || e.target.parentNode === dropArea) {
+            fileInput.click();
+        }
+    };
+    
+    // Drag & drop
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, e => {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+    });
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, () => dropArea.classList.add('dragover'));
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, () => dropArea.classList.remove('dragover'));
+    });
+    
+    dropArea.addEventListener('drop', e => {
+        handleConverterFiles(e.dataTransfer.files);
+    });
+    
+    fileInput.onchange = e => {
+        handleConverterFiles(e.target.files);
+        e.target.value = '';
+    };
+    
+    // Quality slider display
+    $('quality').oninput = updateQualityDisplay;
+    
+    // Clear button
+    $('clear-btn').onclick = () => {
+        if (confirm(translations[$('lang-select').value]?.['confirm-clear'] || 'Clear all?')) {
+            $('preview').innerHTML = '';
+            converterFiles = [];
+            $('download-all-btn').disabled = true;
+            showStatus('Cleared ✓', 'success');
+        }
+    };
+    
+    // Download all
+    $('download-all-btn').onclick = downloadZip;
+}
+
+function updateQualityDisplay() {
+    const val = $('quality').value;
+    $('quality-value').textContent = Math.round(val * 100) + '%';
+}
+
+function handleConverterFiles(files) {
+    const format = $('format').value;
+    const quality = parseFloat($('quality').value);
+    const width = $('width').value ? parseInt($('width').value) : null;
+    const height = $('height').value ? parseInt($('height').value) : null;
+    
+    showStatus(translations[$('lang-select').value]?.['status-converting'] || 'Converting...', 'info');
+    
+    Array.from(files).forEach(file => {
+        processImage(file, { format, quality, width, height }, null, $('preview'), converterFiles);
+    });
+}
+
+function downloadZip() {
+    if (converterFiles.length === 0) {
+        showStatus(translations[$('lang-select').value]?.['status-no-images'] || 'No images ✗', 'error');
+        return;
+    }
+    
+    showStatus('Creating ZIP...', 'info');
+    const zip = new JSZip();
+    
+    converterFiles.forEach(file => {
+        zip.file(file.name, file.blob);
+    });
+    
+    zip.generateAsync({ type: 'blob' }).then(content => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(content);
+        a.download = 'converted_images.zip';
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 100);
+        showStatus('ZIP downloaded ✓', 'success');
+    });
+}
+
+// ==================== COMPRESSOR TOOL ====================
+let compressorFiles = [];
+
+function setupCompressor() {
+    const dropArea = $('compress-drop-area');
+    const fileInput = $('compress-input');
+    
+    $('compress-browse').onclick = () => fileInput.click();
+    dropArea.onclick = () => fileInput.click();
+    
+    // Drag & drop (same as converter)
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); });
+    });
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, () => dropArea.classList.add('dragover'));
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, () => dropArea.classList.remove('dragover'));
+    });
+    
+    dropArea.addEventListener('drop', e => handleCompressorFiles(e.dataTransfer.files));
+    fileInput.onchange = e => { handleCompressorFiles(e.target.files); e.target.value = ''; };
+    
+    // Compression level display
+    $('compress-level').oninput = () => {
+        $('compress-value').textContent = Math.round($('compress-level').value * 100) + '%';
+    };
+    
+    // Compress button
+    $('compress-btn').onclick = () => {
+        if (compressorFiles.length === 0) {
+            showStatus('Add images first ✗', 'error');
+            return;
+        }
+        // Re-process with compression settings
+        const quality = parseFloat($('compress-level').value);
+        $('compress-preview').innerHTML = '';
+        const newFiles = [];
+        
+        compressorFiles.forEach(file => {
+            // Create new image from original blob
+            const reader = new FileReader();
+            reader.onload = evt => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    canvas.getContext('2d').drawImage(img, 0, 0);
+                    
+                    canvas.toBlob(blob => {
+                        const url = URL.createObjectURL(blob);
+                        const card = createPreviewCard(url, file.name, formatBytes(blob.size), url, file.name);
+                        $('compress-preview').appendChild(card);
+                        newFiles.push({ blob, name: file.name, url });
+                    }, file.blob.type, quality);
+                };
+                img.src = evt.target.result;
+            };
+            reader.readAsDataURL(file.blob);
+        });
+        
+        compressorFiles = newFiles;
+        $('compress-download-all').disabled = false;
+        showStatus('Compressed ✓', 'success');
+    };
+    
+    // Clear
+    $('compress-clear').onclick = () => {
+        $('compress-preview').innerHTML = '';
+        compressorFiles = [];
+        $('compress-download-all').disabled = true;
+        showStatus('Cleared ✓', 'success');
+    };
+    
+    // Download all
+    $('compress-download-all').onclick = () => {
+        if (compressorFiles.length === 0) return;
+        const zip = new JSZip();
+        compressorFiles.forEach(f => zip.file(f.name, f.blob));
+        zip.generateAsync({ type: 'blob' }).then(content => {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(content);
+            a.download = 'compressed_images.zip';
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(a.href), 100);
+        });
+    };
+}
+
+function handleCompressorFiles(files) {
+    showStatus('Loading images...', 'info');
+    Array.from(files).forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        // Store original for later compression
+        const reader = new FileReader();
+        reader.onload = evt => {
+            const img = new Image();
+            img.onload = () => {
+                // Show preview of original
+                const card = createPreviewCard(evt.target.result, file.name, formatBytes(file.size), null, null);
+                // Remove download button for originals
+                card.querySelector('.download-btn').remove();
+                $('compress-preview').appendChild(card);
+                compressorFiles.push({ blob: file, name: file.name });
+            };
+            img.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// ==================== RESIZER TOOL ====================
+let resizerFiles = [];
+
+function setupResizer() {
+    const dropArea = $('resize-drop-area');
+    const fileInput = $('resize-input');
+    
+    $('resize-browse').onclick = () => fileInput.click();
+    dropArea.onclick = () => fileInput.click();
+    
+    // Drag & drop setup
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); });
+    });
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, () => dropArea.classList.add('dragover'));
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, () => dropArea.classList.remove('dragover'));
+    });
+    
+    dropArea.addEventListener('drop', e => handleResizerFiles(e.dataTransfer.files));
+    fileInput.onchange = e => { handleResizerFiles(e.target.files); e.target.value = ''; };
+    
+    // Apply resize
+    $('resize-apply').onclick = () => {
+        if (resizerFiles.length === 0) {
+            showStatus('Add images first ✗', 'error');
+            return;
+        }
+        
+        const width = $('resize-width').value ? parseInt($('resize-width').value) : null;
+        const height = $('resize-height').value ? parseInt($('resize-height').value) : null;
+        const scale = $('resize-scale').value ? parseInt($('resize-scale').value) : 100;
+        
+        $('resize-preview').innerHTML = '';
+        const newFiles = [];
+        
+        resizerFiles.forEach(file => {
+            processImage(file.blob, { width, height, scale, format: file.blob.type }, null, $('resize-preview'), newFiles);
+        });
+        
+        resizerFiles = newFiles;
+        $('resize-download-all').disabled = false;
+    };
+    
+    // Clear
+    $('resize-clear').onclick = () => {
+        $('resize-preview').innerHTML = '';
+        resizerFiles = [];
+        $('resize-download-all').disabled = true;
+        showStatus('Cleared ✓', 'success');
+    };
+    
+    // Download all
+    $('resize-download-all').onclick = () => {
+        if (resizerFiles.length === 0) return;
+        const zip = new JSZip();
+        resizerFiles.forEach(f => zip.file(f.name, f.blob));
+        zip.generateAsync({ type: 'blob' }).then(content => {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(content);
+            a.download = 'resized_images.zip';
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(a.href), 100);
+        });
+    };
+}
+
+function handleResizerFiles(files) {
+    showStatus('Loading images...', 'info');
+    Array.from(files).forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = evt => {
+            const img = new Image();
+            img.onload = () => {
+                const card = createPreviewCard(evt.target.result, file.name, formatBytes(file.size), null, null);
+                card.querySelector('.download-btn').remove();
+                $('resize-preview').appendChild(card);
+                resizerFiles.push({ blob: file, name: file.name, originalWidth: img.width, originalHeight: img.height });
+            };
+            img.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// ==================== CROPPER TOOL (Basic Implementation) ====================
+let cropFile = null;
+
+function setupCropper() {
+    const dropArea = $('crop-drop-area');
+    const fileInput = $('crop-input');
+    const canvas = $('crop-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    $('crop-browse').onclick = () => fileInput.click();
+    dropArea.onclick = () => fileInput.click();
+    
+    // Drag & drop
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); });
+    });
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, () => dropArea.classList.add('dragover'));
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, () => dropArea.classList.remove('dragover'));
+    });
+    
+    dropArea.addEventListener('drop', e => {
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) loadCropImage(file);
+    });
+    
+    fileInput.onchange = e => {
+        const file = e.target.files[0];
+        if (file) loadCropImage(file);
+        e.target.value = '';
+    };
+    
+    // Canvas drawing for crop selection
+    canvas.onmousedown = e => startCrop(e, canvas, ctx);
+    canvas.onmousemove = e => drawCrop(e, canvas, ctx);
+    canvas.onmouseup = e => endCrop(e, canvas, ctx);
+    canvas.onmouseleave = e => endCrop(e, canvas, ctx);
+    
+    // Touch support for mobile
+    canvas.ontouchstart = e => { e.preventDefault(); startCrop(e.touches[0], canvas, ctx); };
+    canvas.ontouchmove = e => { e.preventDefault(); drawCrop(e.touches[0], canvas, ctx); };
+    canvas.ontouchend = e => endCrop(e, canvas, ctx);
+    
+    // Crop apply
+    $('crop-apply').onclick = applyCrop;
+    
+    // Cancel
+    $('crop-cancel').onclick = () => {
+        $('crop-container').classList.remove('active');
+        $('crop-preview').innerHTML = '';
+        cropFile = null;
+        showStatus('Cancelled ✓', 'success');
+    };
+}
+
+function loadCropImage(file) {
+    cropFile = file;
+    const reader = new FileReader();
+    reader.onload = evt => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = $('crop-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Fit canvas to image (max 500px for display)
+            const maxWidth = 500;
+            const scale = Math.min(1, maxWidth / img.width);
+            canvas.width = img.width * scale;
+            canvas.height = img.height * scale;
+            
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            
+            // Store original image and scale for cropping
+            state.crop.img = img;
+            state.crop.scale = scale;
+            state.crop.canvas = canvas;
+            state.crop.ctx = ctx;
+            
+            $('crop-container').classList.add('active');
+            showStatus('Drag to select area to crop', 'info');
+        };
+        img.src = evt.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function startCrop(e, canvas, ctx) {
+    const rect = canvas.getBoundingClientRect();
+    state.crop.startX = (e.clientX - rect.left) / state.crop.scale;
+    state.crop.startY = (e.clientY - rect.top) / state.crop.scale;
+    state.crop.isDrawing = true;
+}
+
+function drawCrop(e, canvas, ctx) {
+    if (!state.crop.isDrawing) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    const currentX = (e.clientX - rect.left) / state.crop.scale;
+    const currentY = (e.clientY - rect.top) / state.crop.scale;
+    
+    // Redraw original image
+    ctx.drawImage(state.crop.img, 0, 0, canvas.width / state.crop.scale, canvas.height / state.crop.scale);
+    
+    // Draw selection rectangle
+    ctx.strokeStyle = '#2563eb';
+    ctx.lineWidth = 2 / state.crop.scale;
+    ctx.setLineDash([5 / state.crop.scale, 5 / state.crop.scale]);
+    ctx.strokeRect(
+        Math.min(state.crop.startX, currentX),
+        Math.min(state.crop.startY, currentY),
+        Math.abs(currentX - state.crop.startX),
+        Math.abs(currentY - state.crop.startY)
+    );
+    ctx.setLineDash([]);
+}
+
+function endCrop(e, canvas, ctx) {
+    state.crop.isDrawing = false;
+    state.crop.endX = (e.clientX - canvas.getBoundingClientRect().left) / state.crop.scale;
+    state.crop.endY = (e.clientY - canvas.getBoundingClientRect().top) / state.crop.scale;
+}
+
+function applyCrop() {
+    if (!cropFile || !state.crop.img) return;
+    
+    const { startX, startY, endX, endY, img, scale } = state.crop;
+    const x = Math.min(startX, endX);
+    const y = Math.min(startY, endY);
+    const width = Math.abs(endX - startX);
+    const height = Math.abs(endY - startY);
+    
+    if (width < 10 || height < 10) {
+        showStatus('Please select a larger area ✗', 'error');
+        return;
+    }
+    
+    // Create new canvas for cropped image
+    const outCanvas = document.createElement('canvas');
+    outCanvas.width = width;
+    outCanvas.height = height;
+    const outCtx = outCanvas.getContext('2d');
+    
+    // Draw cropped portion
+    outCtx.drawImage(img, x, y, width, height, 0, 0, width, height);
+    
+    // Convert to blob and show preview
+    outCanvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const ext = getExtension(cropFile.type);
+        const name = cropFile.name.replace(/\.[^/.]+$/, '') + '_cropped.' + ext;
+        
+        const card = createPreviewCard(url, name, formatBytes(blob.size), url, name);
+        $('crop-preview').innerHTML = '';
+        $('crop-preview').appendChild(card);
+        
+        $('crop-container').classList.remove('active');
+        showStatus('Cropped successfully ✓', 'success');
+    }, cropFile.type, 0.95);
+}
+
+// ==================== TOOLS GRID ====================
+function setupToolsGrid() {
+    const tools = [
+        { icon: 'fa-sync', name: 'Image Converter', desc: 'Convert between formats', section: 'converter' },
+        { icon: 'fa-compress', name: 'Compressor', desc: 'Reduce file size', section: 'compressor' },
+        { icon: 'fa-expand', name: 'Resizer', desc: 'Change dimensions', section: 'resizer' },
+        { icon: 'fa-crop-simple', name: 'Cropper', desc: 'Select & crop area', section: 'cropper' },
+        { icon: 'fa-image', name: 'JPG to PNG', desc: 'Convert JPG files', section: 'converter' },
+        { icon: 'fa-file-image', name: 'PNG to WEBP', desc: 'Modern format', section: 'converter' },
+        { icon: 'fa-mobile-screen', name: 'HEIC to JPG', desc: 'iPhone photos', section: 'converter' },
+        { icon: 'fa-minimize', name: 'Compress JPEG', desc: 'Shrink JPG files', section: 'compressor' }
+    ];
+    
+    const grid = $('tools-grid');
+    grid.innerHTML = '';
+    
+    tools.forEach(tool => {
+        const card = document.createElement('div');
+        card.className = 'tool';
+        card.innerHTML = `
+            <div class="tool-icon"><i class="fa-solid ${tool.icon}"></i></div>
+            <div class="tool-title">${tool.name}</div>
+            <div class="tool-desc">${tool.desc}</div>
+        `;
+        card.onclick = () => switchTool(tool.section);
+        grid.appendChild(card);
+    });
+}
+
+// ==================== INITIALIZATION ====================
+function init() {
+    // Set current year in footer
+    $('year').textContent = new Date().getFullYear();
+    
+    // Set privacy/terms dates
+    const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    $('privacy-date').textContent = today;
+    $('terms-date').textContent = today;
+    
+    // Setup all tools
+    setupConverter();
+    setupCompressor();
+    setupResizer();
+    setupCropper();
+    setupToolsGrid();
+    
+    // Update auth UI
+    updateAuthUI();
+    
+    // Initialize quality display
+    updateQualityDisplay();
+    
+    // Handle hash navigation
+    if (location.hash) {
+        const section = location.hash.replace('#', '');
+        if (['converter', 'compressor', 'resizer', 'cropper', 'grid'].includes(section)) {
+            setTimeout(() => switchTool(section), 100);
+        }
+    }
+    
+    console.log('✅ Ultimate Image Tools loaded successfully!');
+}
+
+// Start when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
+</script>
+</body>
+</html>
